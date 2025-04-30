@@ -64,6 +64,7 @@ device_ids = [Id for Id in range(torch.cuda.device_count())]
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
+
 # --- Define the network --- #
 net = Transweather()
 
@@ -108,7 +109,7 @@ labeled_name = 'allweather.txt'
 ### The following files should be placed inside the directory "./data/test/"
 
 # val_filename = 'val_list_rain800.txt'
-val_filename1 = 'raindroptesta.txt'
+val_filename1 = 'snow.txt'
 # val_filename2 = 'test1.txt'
 
 # --- Load training data and validation/test data --- #

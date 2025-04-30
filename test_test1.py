@@ -8,7 +8,7 @@ from utils import validation, validation_val
 import os
 import numpy as np
 import random
-from transweather_model import Transweather
+from transweather_model import Transweather, Transweather_base
 
 # --- Parse hyper-parameters  --- #
 parser = argparse.ArgumentParser(description='Hyper-parameters for network')
@@ -34,25 +34,25 @@ val_data_dir = './data/test/'
 
 # --- Gpu device --- #
 device_ids = [Id for Id in range(torch.cuda.device_count())]
+device_ids = []
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
 
 # --- Validation data loader --- #
 
-val_filename = 'test1.txt' ## This text file should contain all the names of the images and must be placed in ./data/test/ directory
+val_filename = 'snow.txt' ## This text file should contain all the names of the images and must be placed in ./data/test/ directory
 
 val_data_loader = DataLoader(ValData(val_data_dir,val_filename), batch_size=val_batch_size, shuffle=False, num_workers=8)
 
 # --- Define the network --- #
-
-net = Transweather().cuda()
+net = Transweather()
 
 
 net = nn.DataParallel(net, device_ids=device_ids)
 
 
 # --- Load the network weight --- #
-net.load_state_dict(torch.load('./{}/best'.format(exp_name)))
+net.load_state_dict(torch.load('./{}/best'.format(exp_name)), strict=False)
 
 # --- Use the evaluation model in testing --- #
 net.eval()
@@ -64,7 +64,8 @@ if os.path.exists('./results/{}/{}/'.format(category,exp_name))==False:
 
 print('--- Testing starts! ---')
 start_time = time.time()
-val_psnr, val_ssim = validation_val(net, val_data_loader, device, exp_name,category, save_tag=True)
+val_psnr, val_ssim, average_inference = validation_val(net, val_data_loader, device, exp_name,category, save_tag=True)
 end_time = time.time() - start_time
 print('val_psnr: {0:.2f}, val_ssim: {1:.4f}'.format(val_psnr, val_ssim))
 print('validation time is {0:.4f}'.format(end_time))
+print(f"Average Inference Time: {average_inference}")

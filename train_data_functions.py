@@ -42,14 +42,14 @@ class TrainData(data.Dataset):
         width, height = input_img.size
 
         if width < crop_width and height < crop_height :
-            input_img = input_img.resize((crop_width,crop_height), Image.ANTIALIAS)
-            gt_img = gt_img.resize((crop_width, crop_height), Image.ANTIALIAS)
+            input_img = input_img.resize((crop_width,crop_height), Image.BILINEAR)
+            gt_img = gt_img.resize((crop_width, crop_height), Image.BILINEAR)
         elif width < crop_width :
-            input_img = input_img.resize((crop_width,height), Image.ANTIALIAS)
-            gt_img = gt_img.resize((crop_width,height), Image.ANTIALIAS)
+            input_img = input_img.resize((crop_width,height), Image.BILINEAR)
+            gt_img = gt_img.resize((crop_width,height), Image.BILINEAR)
         elif height < crop_height :
-            input_img = input_img.resize((width,crop_height), Image.ANTIALIAS)
-            gt_img = gt_img.resize((width, crop_height), Image.ANTIALIAS)
+            input_img = input_img.resize((width,crop_height), Image.BILINEAR)
+            gt_img = gt_img.resize((width, crop_height), Image.BILINEAR)
 
         width, height = input_img.size
 
